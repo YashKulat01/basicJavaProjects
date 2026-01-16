@@ -11,7 +11,7 @@ public class AllCRUDOperations {
 	public static void main(String[] args) {
 		// demo credentials
 		// com.mysql.jdbc.Driver
-		// jdbc:mysql://127.0.0.1:3306/myDatabase
+		// jdbc:mysql://127.0.0.1:3306/
 		// root,root
 
 		Scanner scn = new Scanner(System.in);
@@ -41,7 +41,7 @@ public class AllCRUDOperations {
 		try {
 
 			Class.forName(driver);
-			System.out.println("Driver Loades Succesfully !!\n");
+			System.out.println("Driver Loaded Succesfully !!\n");
 			isRunning = true;
 
 		} catch (ClassNotFoundException e) {
@@ -52,37 +52,71 @@ public class AllCRUDOperations {
 // WHILE LOOP SECTION...................................
 
 		while (isRunning == true) {
-			System.out.println("---------------------------");
+			System.out.println("\n---------------------------");
 			System.out.println("* CRUD Operations in java *");
 			System.out.println("---------------------------");
-			System.out.println("1 For Create/Insert:");
-			System.out.println("2 For Read/Select:");
-			System.out.println("3 For Update:");
-			System.out.println("4 For Delete:");
-			System.out.println("5 For Exit:");
-			System.out.print("Enter your choice !");
+			System.out.println("1 For Create:");
+			System.out.println("2 For Insert");
+			System.out.println("3 For Read:");
+			System.out.println("4 For Update:");
+			System.out.println("5 For Delete:");
+			System.out.println("6 For Exit:");
+			
+			System.out.print("Enter your choice !:");
 			ch = scn.nextInt();
-			scn.nextLine(); // <-- important line
+			scn.nextLine();
 
 			switch (ch) {
 
-// CREATE/INSERT SECTION..........................
+// CREATE SECTION..........................
 
 			case 1:
 				try {
-					System.out.println("CREATE/INSERT Section:\n");
+					System.out.println("\n*** CREATE Section: ***\n");
 
 					Connection con = DriverManager.getConnection(url, username, password);
 					System.out.println("Connection made Successfully !! ");
 					System.out.println("Connection Id: " + con);
 
 					Statement stmt = con.createStatement();
-					System.out.println("Statement Created Successfully !!");
+					System.out.println("\nStatement Created Successfully !!");
 					System.out.println("Statement Id: " + stmt);
 
 					System.out.print("\nEnter a SQL Query to execute: ");
 					query = scn.nextLine();
-					System.out.println("Your Query: " + query);
+					System.out.println("\nYour Query: " + query);
+
+					stmt.executeUpdate(query);
+
+					System.out.println("Statement Executed !");
+
+					stmt.close();
+					con.close();
+
+					System.out.println("\nStatement closed Successfully !!");
+					System.out.println("Connection closed Successfully !! ");
+
+				} catch (SQLException e) {
+					System.out.println(e.getMessage());
+				}
+				break;
+
+// INSERT SECTION....................................
+				
+			case 2:
+				try {
+					System.out.println("\n*** INSERT Section: ***");
+					Connection con = DriverManager.getConnection(url, username, password);
+					System.out.println("\nConnection made Successfully !! ");
+					System.out.println("Connection Id: " + con);
+
+					Statement stmt = con.createStatement();
+					System.out.println("\nStatement Created Successfully !!");
+					System.out.println("Statement Id: " + stmt);
+
+					System.out.print("\nEnter a SQL Query to execute: ");
+					query = scn.nextLine();
+					System.out.println("\nYour Query: " + query);
 
 					int rowAffected = stmt.executeUpdate(query);
 
@@ -97,26 +131,25 @@ public class AllCRUDOperations {
 
 					System.out.println("\nStatement closed Successfully !!");
 					System.out.println("Connection closed Successfully !! ");
-
-				} catch (SQLException e) {
+				} catch (Exception e) {
+					// TODO: handle exception
 					System.out.println(e.getMessage());
 				}
-				break;
-
+				
 // READ/SELECT SECTION............................
 
-			case 2:
-				System.out.println("READ/SELECT Section:\n");
+			case 3:
+				System.out.println("\n*** READ Section: ***");
 				try {
 					Connection con = DriverManager.getConnection(url, username, password);
-					System.out.println("Connection made Successfully !! ");
+					System.out.println("\nConnection made Successfully !! ");
 					System.out.println("Connection Id: " + con);
 
 					Statement stmt = con.createStatement();
-					System.out.println("Statement created Successfully !!");
+					System.out.println("\nStatement created Successfully !!");
 					System.out.println("Statement Id: " + stmt + "\n");
 
-					System.out.print("Enter a SQL Query to execute: ");
+					System.out.print("\nEnter a SQL Query to execute: ");
 					query = scn.nextLine();
 					System.out.println("Your Query: " + query);
 
@@ -137,11 +170,12 @@ public class AllCRUDOperations {
 						System.out.println("Salary: " + salary);
 						System.out.println();
 					}
+					
 					rs.close();
 					stmt.close();
 					con.close();
 
-					System.out.println("ResultSet closed Successfully !! ");
+					System.out.println("\nResultSet closed Successfully !! ");
 					System.out.println("Statement closed Successfully !! ");
 					System.out.println("Connection closed Successfully !! \n");
 
@@ -152,19 +186,19 @@ public class AllCRUDOperations {
 
 //UPDATE SECTION..................................
 
-			case 3:
-				System.out.println("UPDATE Section:\n");
+			case 4:
+				System.out.println("\n*** UPDATE Section: ***");
 				try {
 
 					Connection con = DriverManager.getConnection(url, username, password);
-					System.out.println("Connection made Successfully !! ");
+					System.out.println("\nConnection made Successfully !! ");
 					System.out.println("Connection Id: " + con);
 
 					Statement stmt = con.createStatement();
-					System.out.println("Statement created Successfully !!");
+					System.out.println("\nStatement created Successfully !!");
 					System.out.println("Statement Id: " + stmt);
 
-					System.out.print("Enter a SQL Query to execute: ");
+					System.out.print("\nEnter a SQL Query to execute: ");
 					query = scn.nextLine();
 					System.out.println("Your Query: " + query);
 
@@ -179,7 +213,7 @@ public class AllCRUDOperations {
 					stmt.close();
 					con.close();
 					System.out.println("\n--------------------------------------------------");
-
+					System.out.println("Statement closed Successfully !! ");
 					System.out.println("Connection closed Successfully !! ");
 
 				} catch (SQLException e) {
@@ -189,21 +223,21 @@ public class AllCRUDOperations {
 
 //DELETE SECTION..................................
 
-			case 4:
-				System.out.println("DELETE Section");
+			case 5:
+				System.out.println("\n*** DELETE Section ***");
 				try {
 
 					Connection con = DriverManager.getConnection(url, username, password);
-					System.out.println("Connection made Successfully !! ");
+					System.out.println("\nConnection made Successfully !! ");
 					System.out.println("Connection Id: " + con);
 
 					Statement stmt = con.createStatement();
-					System.out.println("Statement created Successfully !!" + stmt);
+					System.out.println("\nStatement created Successfully !!" + stmt);
 					System.out.println("Statement Id: " + stmt);
 
-					System.out.print("Enter a SQL Query to execute: ");
+					System.out.print("\nEnter a SQL Query to execute: ");
 					query = scn.nextLine();
-					System.out.println("Your Query: " + query);
+					System.out.println("\nYour Query: " + query);
 
 					int rowAffected = stmt.executeUpdate(query);
 
@@ -216,7 +250,7 @@ public class AllCRUDOperations {
 					stmt.close();
 					con.close();
 					System.out.println("\n--------------------------------------------------");
-
+					System.out.println("Statement closed Successfully !! ");
 					System.out.println("Connection closed Successfully !! ");
 
 				} catch (SQLException e) {
@@ -226,8 +260,9 @@ public class AllCRUDOperations {
 
 //EXIT SECTION....................................
 
-			case 5:
-				System.out.println("You successfully exited an operations !");
+			case 6:
+				System.out.println("\n You successfully exited an operations !");
+				
 				isRunning = false;
 				break;
 
@@ -241,3 +276,4 @@ public class AllCRUDOperations {
 		scn.close();
 	}
 }
+
