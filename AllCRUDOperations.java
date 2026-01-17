@@ -5,24 +5,26 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class AllCRUDOperations {
 	public static void main(String[] args) {
 		// demo credentials
+
 		// com.mysql.jdbc.Driver
-		// jdbc:mysql://127.0.0.1:3306/
+		// jdbc:mysql://127.0.0.1:3306/your_db_name
 		// root,root
 
 		Scanner scn = new Scanner(System.in);
 
 // VARIABLES ....
 
-		String driver, url, username, password, query = " ";
-		int ch;
+		String driver = null, url = null, username, password, query = " ";
+		int ch = 0;
 		boolean isRunning;
 
-		System.out.println("*** Connection Part ***\n");
+		System.out.println("*** Registration Part ***\n");
 
 // DATABASE REGISTRATION SECTION..........
 
@@ -45,7 +47,8 @@ public class AllCRUDOperations {
 			isRunning = true;
 
 		} catch (ClassNotFoundException e) {
-			System.out.println("\nInvalid Credentials!!! ");
+			System.out.println("\nError:");
+			System.out.println("Invalid Credentials!!! ");
 			isRunning = false;
 		}
 
@@ -61,10 +64,17 @@ public class AllCRUDOperations {
 			System.out.println("4 For Update:");
 			System.out.println("5 For Delete:");
 			System.out.println("6 For Exit:");
-			
-			System.out.print("Enter your choice !:");
-			ch = scn.nextInt();
-			scn.nextLine();
+
+			try {
+				System.out.print("Enter your choice !:");
+				ch = scn.nextInt();
+				scn.nextLine();
+			} catch (InputMismatchException e) {
+				// TODO: handle exception
+				System.out.println("\nError:");
+				System.out.println("Please enter a valid choice between 1-6 !");
+				isRunning = false;
+			}
 
 			switch (ch) {
 
@@ -97,12 +107,13 @@ public class AllCRUDOperations {
 					System.out.println("Connection closed Successfully !! ");
 
 				} catch (SQLException e) {
+					System.out.println("\nError:");
 					System.out.println(e.getMessage());
 				}
 				break;
 
 // INSERT SECTION....................................
-				
+
 			case 2:
 				try {
 					System.out.println("\n*** INSERT Section: ***");
@@ -133,9 +144,11 @@ public class AllCRUDOperations {
 					System.out.println("Connection closed Successfully !! ");
 				} catch (Exception e) {
 					// TODO: handle exception
+					System.out.println("\nError:");
 					System.out.println(e.getMessage());
 				}
-				
+				break;
+
 // READ/SELECT SECTION............................
 
 			case 3:
@@ -158,19 +171,24 @@ public class AllCRUDOperations {
 					System.out.println("ResulSet Id: " + rs);
 
 					System.out.println("\nData from MYSQL database:");
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						String name = rs.getString("name");
-						int salary = rs.getInt("Salary");
 
-						System.out.println("------------------------");
-						System.out.println("Data from employee table:");
-						System.out.println("Id: " + id);
-						System.out.println("Name: " + name);
-						System.out.println("Salary: " + salary);
-						System.out.println();
+					if (!rs.next()) {
+						System.out.println("No data Found !!");
+					} else {
+						while (rs.next()) {
+							int id = rs.getInt("id");
+							String name = rs.getString("name");
+							int salary = rs.getInt("Salary");
+
+							System.out.println("------------------------");
+							System.out.println("Data from table:");
+							System.out.println("Id: " + id);
+							System.out.println("Name: " + name);
+							System.out.println("Salary: " + salary);
+							System.out.println("-------------------------");
+						}
 					}
-					
+
 					rs.close();
 					stmt.close();
 					con.close();
@@ -180,6 +198,7 @@ public class AllCRUDOperations {
 					System.out.println("Connection closed Successfully !! \n");
 
 				} catch (SQLException e) {
+					System.out.println("\nError:");
 					System.out.println(e.getMessage());
 				}
 				break;
@@ -205,7 +224,7 @@ public class AllCRUDOperations {
 					int rowAffected = stmt.executeUpdate(query);
 
 					if (rowAffected > 0) {
-						System.out.println("\nUpdate Successfull !! " + rowAffected + " row(s) affected.");
+						System.out.println("\nUpdate Successful !! " + rowAffected + " row(s) affected.");
 					} else {
 						System.out.println("Update Failed !!");
 					}
@@ -217,6 +236,7 @@ public class AllCRUDOperations {
 					System.out.println("Connection closed Successfully !! ");
 
 				} catch (SQLException e) {
+					System.out.println("\nError:");
 					System.out.println(e.getMessage());
 				}
 				break;
@@ -254,6 +274,7 @@ public class AllCRUDOperations {
 					System.out.println("Connection closed Successfully !! ");
 
 				} catch (SQLException e) {
+					System.out.println("\nError:");
 					System.out.println(e.getMessage());
 				}
 				break;
@@ -261,19 +282,18 @@ public class AllCRUDOperations {
 //EXIT SECTION....................................
 
 			case 6:
-				System.out.println("\n You successfully exited an operations !");
-				
+				System.out.println("\nYou successfully exited an operations !");
+				System.out.println("Press CTRL + F11 to start again ");
 				isRunning = false;
 				break;
 
 //DEFAULT SECTION.................................
 
 			default:
-				System.out.println("Invalid choice! Please select choice from below:");
+				System.out.println("\nInvalid choice! Please select choice from below:");
 				break;
 			}
 		}
 		scn.close();
 	}
 }
-
